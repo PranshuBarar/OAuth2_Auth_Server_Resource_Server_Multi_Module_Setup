@@ -1,0 +1,17 @@
+dependencies {
+    implementation 'org.springframework.security:spring-security-oauth2-authorization-server'
+
+}
+
+bootJar {
+    enabled = false
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+jar {
+    enabled = true
+}

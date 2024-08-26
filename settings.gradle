@@ -1,0 +1,4 @@
+rootProject.name = 'oauth2setupv3'
+include 'auth-service'
+include 'resource-service'
+include 'repo-service'

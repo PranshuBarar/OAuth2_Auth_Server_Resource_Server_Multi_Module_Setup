@@ -20,7 +20,7 @@ public class UserController {
 
     public static final Logger logger = Logger.getLogger(String.valueOf(UserController.class));
 
-    @GetMapping("/")
+    @GetMapping("/hello")
     public String home(Authentication authentication){
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         return "hello " + userDetails.getUserEntity().getUsername();

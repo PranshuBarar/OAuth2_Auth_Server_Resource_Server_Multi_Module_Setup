@@ -31,35 +31,36 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 @Order(1)
 public class AuthSecurityConfig {
-
 
     @Bean
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
             throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(Customizer.withDefaults());
-
-
+                .oidc(Customizer.withDefaults())
+                .and()
+                .exceptionHandling((exceptions) -> exceptions.authenticationEntryPoint(
+                new LoginUrlAuthenticationEntryPoint("/login")
+        ));
         return http.build();
     }
-
-    @Bean
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
-            throws Exception {
-        http
-                .authorizeHttpRequests((req) -> req
-                        .anyRequest().authenticated()
-                )
-                .formLogin(Customizer.withDefaults());
-
-        return http.build();
-    }
-
+//
+//    @Bean
+//    public SecurityFilterChain defaultServerSecurityFilterChain(HttpSecurity http) throws Exception {
+//        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+//        http
+//                .formLogin(Customizer.withDefaults())
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .anyRequest().authenticated()
+//                );
+//
+//        return http.build();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -74,7 +75,8 @@ public class AuthSecurityConfig {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://localhost:8090/login/oauth2/code/myoauth2")
+//                .redirectUri("http://localhost:8090/login/oauth2/code/myoauth2")
+                .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .build();

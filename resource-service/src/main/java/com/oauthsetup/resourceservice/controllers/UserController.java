@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
@@ -21,9 +22,8 @@ public class UserController {
     public static final Logger logger = Logger.getLogger(String.valueOf(UserController.class));
 
     @GetMapping("/hello")
-    public String home(Authentication authentication){
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        return "hello " + userDetails.getUserEntity().getUsername();
+    public String home(){
+        return userService.hello();
     }
 
     @PutMapping("/signup")
@@ -31,5 +31,4 @@ public class UserController {
         String response = userService.signup(userDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 }
